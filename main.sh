@@ -34,8 +34,8 @@ mkdir /EC2Instance/
 cd /EC2Instance/
 git clone https://github.com/manish5133/ec2serversterraform.git
 cd ec2serversterraform/
-sed -i -r 's/access_key = "" /access_key = ""/' /etc/ansible/ansible.cfg
-sed -i -r 's/secret_key = "" /secret_key = ""/' /EC2Instance/ec2serversterraform/provider.tf
+sed -i -r 's/access_key = "" /access_key = "ChangeHere"/' /EC2Instance/ec2serversterraform/provider.tf
+sed -i -r 's/secret_key = "" /secret_key = "ChangeHere"/' /EC2Instance/ec2serversterraform/provider.tf
 terraform init
 terraform plan
 terraform apply

@@ -17,11 +17,11 @@ yum install ansible -y
 sed -i -r 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
 mv /etc/ansible/hosts /etc/ansible/hosts.org
 echo "[Controller]" > /etc/ansible/hosts
-echo "10.194.100.11" >> /etc/ansible/hosts
+echo "10.194.100.11 ansible_ssh_user=centos" >> /etc/ansible/hosts
 echo "[Storage]" >> /etc/ansible/hosts
-echo "10.194.100.12" >> /etc/ansible/hosts
+echo "10.194.100.12 ansible_ssh_user=centos" >> /etc/ansible/hosts
 echo "[Compute]" >> /etc/ansible/hosts
-echo "10.194.100.13" >> /etc/ansible/hosts
+echo "10.194.100.13 ansible_ssh_user=centos" >> /etc/ansible/hosts
 
 
 # INSTALLING TERRAFORM PACKAGES

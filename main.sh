@@ -44,6 +44,10 @@ terraform apply
 
 # Update Hostname in All Servers
 echo -ne '\n' "[ALLSERVER]" >> /etc/ansible/hosts
-echo "10.194.100.11 hostname=Controller" >> /etc/ansible/hosts
-echo "10.194.100.12 hostname=Storage" >> /etc/ansible/hosts
-echo "10.194.100.13 hostname=Compute" >> /etc/ansible/hosts
+echo -ne '\n' "10.194.100.11 hostname=Controller" >> /etc/ansible/hosts
+echo -ne '\n' "10.194.100.12 hostname=Storage" >> /etc/ansible/hosts
+echo -ne '\n' "10.194.100.13 hostname=Compute" >> /etc/ansible/hosts
+
+
+# Run Ansible Script to set hostname
+ansible-playbook hostnamechange.yaml  

@@ -12,8 +12,9 @@ yum install wget -y
 yum install git -y
 
 # INSTALLING ANSIBLE PACKAGES
-yum --enablerepo=epel -y install ansible openssh-clients
-sed -i -r 's/#host_key_checking = False /host_key_checking = False/' /etc/ansible/ansible.cfg
+yum install epel-release -y
+yum install ansible -y
+sed -i -r 's/#host_key_checking = False/host_key_checking = False/' /etc/ansible/ansible.cfg
 mv /etc/ansible/hosts /etc/ansible/hosts.org
 echo "[Controller]" > /etc/ansible/hosts
 echo "[10.194.100.11]" >> /etc/ansible/hosts
@@ -34,8 +35,8 @@ mkdir /EC2Instance/
 cd /EC2Instance/
 git clone https://github.com/manish5133/ec2serversterraform.git
 cd ec2serversterraform/
-sed -i -r 's/access_key = "" /access_key = "ChangeHere"/' /EC2Instance/ec2serversterraform/provider.tf
-sed -i -r 's/secret_key = "" /secret_key = "ChangeHere"/' /EC2Instance/ec2serversterraform/provider.tf
+sed -i -r 's/access_key = ""/access_key = "ChangeHere"/' /EC2Instance/ec2serversterraform/provider.tf
+sed -i -r 's/secret_key = ""/secret_key = "ChangeHere"/' /EC2Instance/ec2serversterraform/provider.tf
 terraform init
 terraform plan
 terraform apply

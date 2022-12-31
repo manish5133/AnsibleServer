@@ -1,0 +1,6 @@
+- hosts: ALLSERVER
+  become: yes
+  tasks:
+  - name: "update hostnames"
+    hostname:
+      name: "{{ hostname }}"

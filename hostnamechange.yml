@@ -9,8 +9,8 @@
     blockinfile:
     path: /etc/hosts
     block: |
-    10.194.100.11
-    10.194.100.12
-    10.194.100.13
+    10.194.100.11 Controller
+    10.194.100.12 Storage
+    10.194.100.13 Compute
       
       

@@ -50,4 +50,5 @@ echo -ne '\n' "10.194.100.13 hostname=Compute" >> /etc/ansible/hosts
 
 
 # Run Ansible Script to set hostname
+cd ansibleserver
 ansible-playbook hostnamechange.yml  

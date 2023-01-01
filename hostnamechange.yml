@@ -4,13 +4,11 @@
   - name: "update hostnames"
     hostname:
       name: "{{ hostname }}"
-  tasks:
   - name: "Update hosts File"
     blockinfile:
-    path: /etc/hosts
-    block: |
-    10.194.100.11 Controller
-    10.194.100.12 Storage
-    10.194.100.13 Compute
-      
+     path: /etc/hosts
+     block: |
+      10.194.100.11 Controller
+      10.194.100.12 Storage
+      10.194.100.13 Compute
       

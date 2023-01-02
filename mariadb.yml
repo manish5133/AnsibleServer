@@ -1,0 +1,46 @@
+# Create new file for MariaDB Servers
+# Install & Configure MariaDB Database
+- hosts: Controller
+  become: yes
+  tasks:
+  - name: "Install MariaDB Packages"
+    yum:
+      name: '{{ item }}'
+      state: present
+      update_cache: yes
+    with_items:
+      - mariadb
+      - mariadb-server
+      - python2-PyMySQL
+  - name: "Update hosts File"
+    command: touch /etc/my.cnf.d/openstack.cnf
+    blockinfile:
+     path: /etc/my.cnf.d/openstack.cnf
+     block: |
+      [mysqld]
+      bind-address = Controller
+
+      default-storage-engine = innodb
+      innodb_file_per_table = on
+      max_connections = 4096
+      collation-server = utf8_general_ci
+      character-set-server = utf8
+  - name: "Start and Enabled the Service"
+    name: mariadb
+     enabled: true
+     state: started
+  - name: "secure mariadb"
+    become: yes
+    expect:
+      command: mysql_secure_installation
+      responses:
+        'Enter current password for root': 'admin'
+        'Set root password': 'y'
+        'New password': 'admin' 
+        'Re-enter new password': 'admin'
+        'Remove anonymous users': 'y'
+        'Disallow root login remotely': 'y'
+        'Remove test database': 'y'
+        'Reload privilege tables now': 'y'
+      timeout: 1
+    register: secure_mariadb

@@ -40,12 +40,8 @@
       command: mysql_secure_installation
       responses:
         'Enter current password for root': 'admin'
-        'Set root password': 'y'
-        'New password': 'admin' 
-        'Re-enter new password': 'admin'
+        'Set root password': 'n'
         'Remove anonymous users': 'y'
         'Disallow root login remotely': 'y'
         'Remove test database': 'y'
         'Reload privilege tables now': 'y'
-      timeout: 1
-    register: secure_mariadb

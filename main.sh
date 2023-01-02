@@ -52,10 +52,6 @@ echo -ne '\n' "10.194.100.11 hostname=Controller" >> /etc/ansible/hosts
 echo -ne '\n' "10.194.100.12 hostname=Storage" >> /etc/ansible/hosts
 echo -ne '\n' "10.194.100.13 hostname=Compute" >> /etc/ansible/hosts
 
-# Update Hostname in Other Servers
-echo -ne '\n' "[OTHERSERVER]" >> /etc/ansible/hosts
-echo -ne '\n' "10.194.100.12 hostname=Storage" >> /etc/ansible/hosts
-echo -ne '\n' "10.194.100.13 hostname=Compute" >> /etc/ansible/hosts
 
 # Sleep for 2min
 sleep 2m

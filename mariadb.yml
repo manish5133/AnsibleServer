@@ -12,23 +12,28 @@
       - mariadb
       - mariadb-server
       - python2-PyMySQL
-  - name: "Update hosts File"
+
+  - name: "create Openstack database configuration file"
     command: touch /etc/my.cnf.d/openstack.cnf
+  - name: "Update file with configuration of database"
     blockinfile:
      path: /etc/my.cnf.d/openstack.cnf
      block: |
-      [mysqld]
-      bind-address = Controller
+       [mysqld]
+       bind-address = Controller
 
-      default-storage-engine = innodb
-      innodb_file_per_table = on
-      max_connections = 4096
-      collation-server = utf8_general_ci
-      character-set-server = utf8
+       default-storage-engine = innodb
+       innodb_file_per_table = on
+       max_connections = 4096
+       collation-server = utf8_general_ci
+       character-set-server = utf8
+
   - name: "Start and Enabled the Service"
-    name: mariadb
+    service:
+     name: mariadb
      enabled: true
      state: started
+     
   - name: "secure mariadb"
     become: yes
     expect:

@@ -40,7 +40,7 @@ read accesskey
 echo "Enter AWS Provider Secret Key:"
 read secretkey
 sed -i -r 's/access_key = ""/access_key = "$accesskey"/' /EC2Instance/ec2serversterraform/provider.tf
-sed -i -r 's%secret_key = ""%secret_key = "$secretkey"%' /EC2Instance/ec2serversterraform/provider.tf
+sed -i "/secret_key = ""/ s%.*%secret_key = $secretkey%g" /EC2Instance/ec2serversterraform/provider.tf
 terraform init
 terraform plan
 terraform apply
@@ -52,9 +52,15 @@ echo -ne '\n' "10.194.100.11 hostname=Controller" >> /etc/ansible/hosts
 echo -ne '\n' "10.194.100.12 hostname=Storage" >> /etc/ansible/hosts
 echo -ne '\n' "10.194.100.13 hostname=Compute" >> /etc/ansible/hosts
 
+# Update Hostname in Other Servers
+echo -ne '\n' "[OTHERSERVER]" >> /etc/ansible/hosts
+echo -ne '\n' "10.194.100.12 hostname=Storage" >> /etc/ansible/hosts
+echo -ne '\n' "10.194.100.13 hostname=Compute" >> /etc/ansible/hosts
+
+# Sleep for 2min
+sleep 2m
 
 # Run Ansible Script to set hostname
 cd /root/ansibleserver
 ansible-playbook initialsetup.yml
 ansible-playbook mariadb.yml
-

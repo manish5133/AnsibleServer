@@ -1,0 +1,19 @@
+# Memcached Configurations
+- hosts: Controller
+  become: yes
+  tasks:
+  - name: "Install Memcached Packages"
+    yum:
+      name: '{{ item }}'
+      state: present
+      update_cache: yes
+    with_items:
+      -memcached
+      -python3-memcached
+  - name: "Add controller name in the config file."
+    command: sed -i -r 's/OPTIONS="-l 127.0.0.1,::1"/OPTIONS="-l 127.0.0.1,::1,Controller"/' /etc/sysconfig/memcached
+  - name: "Start and Enabled the Memcached Service"
+    service:
+     name: memcached
+     enabled: true
+     state: started

@@ -1,4 +1,4 @@
-# Etcd Configurations 
+# Etcd Configurations
 - hosts: Controller
   become: yes
   tasks:
@@ -9,7 +9,10 @@
       update_cache: yes
   - name: "Move the config file"
     command: mv /etc/etcd/etcd.conf /etc/etcd/etcd.conf_bkp
-    command: touch /etc/etcd/etcd.conf
+  - name: "Create etcd file"
+    file:
+     path: /etc/etcd/etcd.conf
+     state: touch
   - name: "Update etcd file content"
     blockinfile:
      path: /etc/etcd/etcd.conf

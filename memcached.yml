@@ -9,7 +9,7 @@
       update_cache: yes
     with_items:
       - memcached
-      - python3-memcached
+      - python-memcached
   - name: "Add controller name in the config file."
     command: sed -i -r 's/OPTIONS="-l 127.0.0.1,::1"/OPTIONS="-l 127.0.0.1,::1,Controller"/' /etc/sysconfig/memcached
   - name: "Start and Enabled the Memcached Service"

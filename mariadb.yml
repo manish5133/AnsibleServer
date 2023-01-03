@@ -45,3 +45,9 @@
         'Disallow root login remotely': 'y'
         'Remove test database': 'y'
         'Reload privilege tables now': 'y'
+      mysql_user: name=root host={{item}} password={{admin}}
+      with_items:
+       - 127.0.0.1
+       - ::1
+       - localhost
+       - Controller

@@ -1,0 +1,18 @@
+# Message Queue Configurations
+- hosts: Controller
+  become: yes
+  tasks:
+  - name: "Install Message queue Packages"
+    yum:
+      name: rabbitmq-server
+      state: present
+      update_cache: yes
+  - name: "Start and Enabled the Message queue Service"
+    service:
+     name: rabbitmq-server
+     enabled: true
+     state: started
+
+  - name: "Add Openstack users & set permissions"
+    command: rabbitmqctl add_user openstack admin
+    command: rabbitmqctl set_permissions openstack ".*" ".*" ".*"

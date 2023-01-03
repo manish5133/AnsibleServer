@@ -39,7 +39,7 @@ echo "Enter AWS Provider Access Key:"
 read accesskey
 echo "Enter AWS Provider Secret Key:"
 read secretkey
-sed -i -r 's/access_key = ""/access_key = $accesskey/' /EC2Instance/ec2serversterraform/provider.tf
+sed -i "/access_key = ""/ s%.*%access_key = $accesskey%g" /EC2Instance/ec2serversterraform/provider.tf
 sed -i "/secret_key = ""/ s%.*%secret_key = $secretkey%g" /EC2Instance/ec2serversterraform/provider.tf
 terraform init
 terraform plan

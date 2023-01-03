@@ -39,7 +39,7 @@
     expect:
       command: mysql_secure_installation
       responses:
-        'Enter current password for root': 'admin'
+        'Enter current password for root': ''
         'Set root password': 'n'
         'Remove anonymous users': 'y'
         'Disallow root login remotely': 'y'

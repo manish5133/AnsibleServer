@@ -13,6 +13,8 @@
      enabled: true
      state: started
 
-  - name: "Add Openstack users & set permissions"
+  - name: "Add Openstack users"
     command: rabbitmqctl add_user openstack admin
+
+  - name: "Set permission to the user"
     command: rabbitmqctl set_permissions openstack ".*" ".*" ".*"

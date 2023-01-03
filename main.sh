@@ -60,3 +60,6 @@ sleep 2m
 cd /root/ansibleserver
 ansible-playbook initialsetup.yml
 ansible-playbook mariadb.yml
+ansible-playbook message.yml
+ansible-playbook memcached.yml
+ansible-playbook etcd.yml

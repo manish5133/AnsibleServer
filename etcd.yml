@@ -1,0 +1,32 @@
+# Etcd Configurations 
+- hosts: Controller
+  become: yes
+  tasks:
+  - name: "Install Etcd Packages"
+    yum:
+      name: etcd
+      state: present
+      update_cache: yes
+  - name: "Move the config file"
+    command: mv /etc/etcd/etcd.conf /etc/etcd/etcd.conf_bkp
+    command: touch /etc/etcd/etcd.conf
+  - name: "Update etcd file content"
+    blockinfile:
+     path: /etc/etcd/etcd.conf
+     block: |
+      #[Member]
+      ETCD_DATA_DIR="/var/lib/etcd/default.etcd"
+      ETCD_LISTEN_PEER_URLS="http://Controller:2380"
+      ETCD_LISTEN_CLIENT_URLS="http://Controller:2379"
+      ETCD_NAME="Controller"
+      #[Clustering]
+      ETCD_INITIAL_ADVERTISE_PEER_URLS="http://Controller:2380"
+      ETCD_ADVERTISE_CLIENT_URLS="http://Controller:2379"
+      ETCD_INITIAL_CLUSTER="controller=http://Controller:2380"
+      ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster-01"
+      ETCD_INITIAL_CLUSTER_STATE="new"
+  - name: "Start and Enabled the Etcd Service"
+    service:
+     name: etcd
+     enabled: true
+     state: started

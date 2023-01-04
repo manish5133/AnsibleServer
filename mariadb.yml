@@ -21,6 +21,17 @@
      enabled: true
      state: started
 
+  - name: "secure mariadb"
+    expect:
+      command: mysql_secure_installation
+      responses:
+        'Enter current password for root': ''
+        'Set root password': 'n'
+        'Remove anonymous users': 'y'
+        'Disallow root login remotely': 'y'
+        'Remove test database': 'y'
+        'Reload privilege tables now': 'y'
+
   - name: Set MySQL root Password
     mysql_user:
       login_host: 'localhost'

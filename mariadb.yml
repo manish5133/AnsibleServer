@@ -1,6 +1,8 @@
 # Create new file for MariaDB Servers
 # Install & Configure MariaDB Database
 - hosts: Controller
+  vars:
+   mysql_root_password: admin
   become: yes
   tasks:
   - name: "Install MariaDB Packages"
@@ -13,8 +15,33 @@
       - mariadb-server
       - python2-PyMySQL
 
-  - name: "create Openstack database configuration file"
-    command: touch /etc/my.cnf.d/openstack.cnf
+  - name: "Start and Enabled the Service"
+    service:
+     name: mariadb
+     enabled: true
+     state: started
+
+  - name: Set MySQL root Password
+    mysql_user:
+      login_host: 'localhost'
+      login_user: 'root'
+      login_password: ''
+      name: 'root'
+      host: "{{ item }}"
+      password: '{{ mysql_root_password }}'
+      state: present
+      priv: "*.*:ALL,GRANT"
+    with_items:
+       - Controller
+       - 127.0.0.1
+       - ::1
+       - localhost
+
+  - name: "Create database openstack config file"
+    file:
+     path: /etc/my.cnf.d/openstack.cnf
+     state: touch
+
   - name: "Update file with configuration of database"
     blockinfile:
      path: /etc/my.cnf.d/openstack.cnf
@@ -31,23 +58,4 @@
   - name: "Start and Enabled the Service"
     service:
      name: mariadb
-     enabled: true
-     state: started
-     
-  - name: "secure mariadb"
-    become: yes
-    expect:
-      command: mysql_secure_installation
-      responses:
-        'Enter current password for root': ''
-        'Set root password': 'n'
-        'Remove anonymous users': 'y'
-        'Disallow root login remotely': 'y'
-        'Remove test database': 'y'
-        'Reload privilege tables now': 'y'
-      #mysql_user: name=root host={{item}} password={{admin}}
-      #with_items:
-       #- 127.0.0.1
-       #- ::1
-       #- localhost
-       #- Controller
+     state: restarted

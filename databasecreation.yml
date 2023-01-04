@@ -1,0 +1,20 @@
+- hosts: Controller
+  vars:
+   mysql_root_password: admin
+  become: yes
+  tasks:
+  - name: Create Database For All Services
+    mysql_db:
+     name: "{{ item }}"
+     state: present
+     login_user: root
+     login_password: "{{ mysql_root_password }}"
+     login_host: Controller
+    with_items:
+      - keystone
+      - glance
+      - nova_api
+      - nova
+      - nova_cell0
+      - neutron
+      - cinder

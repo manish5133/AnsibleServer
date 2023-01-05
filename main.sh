@@ -63,3 +63,5 @@ ansible-playbook mariadb.yml
 ansible-playbook message.yml
 ansible-playbook memcached.yml
 ansible-playbook etcd.yml
+ansible-playbook databasecreation.yml 
+ansible-playbook databaseuseraccess.yml

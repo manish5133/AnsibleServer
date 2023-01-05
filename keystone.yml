@@ -1,0 +1,65 @@
+# Creating new file for Keystone Service
+# Keystone Service
+- hosts: Controller
+  become: yes
+  tasks:
+   - name: "Installing & Configuring Keystone Service"
+     yum:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+     with_items:
+      - openstack-keystone
+      - httpd
+      - mod_wsgi
+
+   - name: "Add Connection String In the Config File"
+     lineinfile:
+       path: /etc/keystone/keystone.conf
+       regexp: '^[database]'
+       insertafter: '^\[database\]'
+       line: "connection = mysql+pymysql://keystone:admin@Controller/keystone"
+       state: present
+   - lineinfile:
+       path: /etc/keystone/keystone.conf
+       regexp: '^[token]'
+       insertafter: '^\[token\]'
+       line: "provider = fernet"
+       state: present
+   - lineinfile:
+       path: /etc/httpd/conf/httpd.conf
+       insertafter: '#ServerName www.example.com:80'
+       line: "ServerName Controller"
+       state: present
+
+   - name: "Commands to configure Keystone Service"
+     command: '/usr/bin/keystone-manage db_sync'
+     ignore_errors: true
+   - command: 'keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone'
+   - command: 'keystone-manage credential_setup --keystone-user keystone --keystone-group keystone'
+   - command: 'keystone-manage bootstrap --bootstrap-password admin --bootstrap-admin-url http://Controller:5000/v3/ --bootstrap-internal-url http://Controller:5000/v3
+--bootstrap-public-url http://Controller:5000/v3 --bootstrap-region-id RegionOne'
+     ignore_errors: true
+   - command:  'ln -s /usr/share/keystone/wsgi-keystone.conf /etc/httpd/conf.d/'
+
+   - name: "Start & Enabled the Httpd Service"
+     service:
+      name: httpd
+      enabled: true
+      state: started
+
+   - name: "Create admin-openrc file"
+     file:
+      path: /root/admin-openrc
+      state: touch
+   - blockinfile:
+      path: /root/admin-openrc
+      block: |
+        export OS_PROJECT_DOMAIN_NAME=Default
+        export OS_USER_DOMAIN_NAME=Default
+        export OS_PROJECT_NAME=admin
+        export OS_USERNAME=admin
+        export OS_PASSWORD=admin
+        export OS_AUTH_URL=http://Controller:5000/v3
+        export OS_IDENTITY_API_VERSION=3
+        export OS_IMAGE_API_VERSION=2

@@ -1,4 +1,3 @@
-# Creating new file for Keystone Service
 # Keystone Service
 - hosts: Controller
   become: yes
@@ -36,12 +35,16 @@
      command: '/usr/bin/keystone-manage db_sync'
      ignore_errors: true
    - command: 'keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone'
+     ignore_errors: true
    - command: 'keystone-manage credential_setup --keystone-user keystone --keystone-group keystone'
-   - command: 'keystone-manage bootstrap --bootstrap-password admin --bootstrap-admin-url http://Controller:5000/v3/ --bootstrap-internal-url http://Controller:5000/v3
---bootstrap-public-url http://Controller:5000/v3 --bootstrap-region-id RegionOne'
+     ignore_errors: true
+   - command: 'keystone-manage bootstrap --bootstrap-password admin   --bootstrap-admin-url http://Controller:5000/v3/   --bootstrap-internal-url http://Controller:5000/v3/   --bootstrap-public-url http://Controller:5000/v3/   --bootstrap-region-id RegionOne'
+     ignore_errors: true
+   - command: 'keystone-manage bootstrap --bootstrap-password admin   --bootstrap-admin-url http://Controller:5000/v3/   --bootstrap-internal-url http://Controller:5000
+/v3/   --bootstrap-public-url http://Controller:5000/v3/   --bootstrap-region-id RegionOne'
      ignore_errors: true
    - command:  'ln -s /usr/share/keystone/wsgi-keystone.conf /etc/httpd/conf.d/'
-
+     ignore_errors: true
    - name: "Start & Enabled the Httpd Service"
      service:
       name: httpd
@@ -50,10 +53,10 @@
 
    - name: "Create admin-openrc file"
      file:
-      path: /root/admin-openrc
+      path: /home/centos/admin-openrc
       state: touch
    - blockinfile:
-      path: /root/admin-openrc
+      path: /home/centos/admin-openrc
       block: |
         export OS_PROJECT_DOMAIN_NAME=Default
         export OS_USER_DOMAIN_NAME=Default
@@ -63,3 +66,7 @@
         export OS_AUTH_URL=http://Controller:5000/v3
         export OS_IDENTITY_API_VERSION=3
         export OS_IMAGE_API_VERSION=2
+
+   - name: "Create Service Project"
+     command: source /home/centos/admin-openrc
+   - command: openstack project create --domain default --description "Service Project" service

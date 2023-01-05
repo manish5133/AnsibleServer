@@ -1,0 +1,65 @@
+#Creating Users for all service 
+- hosts: Controller
+  vars:
+   mysql_root_password: admin
+  become: yes
+  tasks:
+  - name: Create Keystone User
+    mysql_user:
+     login_user: root
+     login_password: "{{ mysql_root_password }}"
+     login_host: Controller
+     name: "keystone"
+     state: present
+     password: admin
+     host: ""
+     priv:
+      "keystone.*:ALL,GRANT"
+
+  - name: Create Glance User
+    mysql_user:
+     name: "glance"
+     state: present
+     password: admin
+     host: ""
+     login_user: root
+     login_password: "{{ mysql_root_password }}"
+     login_host: Controller
+     priv:
+      "glance.*:ALL,GRANT"
+
+  - name: Create Cinder User
+    mysql_user:
+     name: "cinder"
+     state: present
+     password: admin
+     host: ""
+     login_user: root
+     login_password: "{{ mysql_root_password }}"
+     login_host: Controller
+     priv:
+      "cinder.*:ALL,GRANT"
+
+  - name: Create Neutron User
+    mysql_user:
+     name: "neutron"
+     state: present
+     password: admin
+     host: ""
+     login_user: root
+     login_password: "{{ mysql_root_password }}"
+     login_host: Controller
+     priv:
+      "neutron.*:ALL,GRANT"
+
+  - name: Create Nova User
+    mysql_user:
+     name: "nova"
+     state: present
+     password: admin
+     host: ""
+     login_user: root
+     login_password: "{{ mysql_root_password }}"
+     login_host: Controller
+     priv:
+      "nova.*:ALL,GRANT/nova_api.*:ALL,GRANT/nova_cell0.*:ALL,GRANT"

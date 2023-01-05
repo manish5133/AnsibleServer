@@ -14,6 +14,7 @@
       - mariadb
       - mariadb-server
       - python2-PyMySQL
+      - pexpect
 
   - name: "Start and Enabled the Service"
     service:

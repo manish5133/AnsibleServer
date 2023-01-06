@@ -9,7 +9,11 @@ ssh-keygen -t rsa -N ""  -f /root/.ssh/id_rsa
 yum update -y
 yum upgrade -y
 yum install wget -y
+yum install screen -y
 yum install git -y
+
+# Performing task in screen to avoid any network glitch
+screen -S OpenstackInstallation
 
 # INSTALLING ANSIBLE PACKAGES
 yum install epel-release -y

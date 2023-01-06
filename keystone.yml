@@ -68,5 +68,5 @@
         export OS_IMAGE_API_VERSION=2
 
    - name: "Create Service Project"
-     command: source /home/centos/admin-openrc
+     shell: . /root/admin-openrc
    - command: openstack project create --domain default --description "Service Project" service

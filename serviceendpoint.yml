@@ -1,0 +1,12 @@
+# Creating new files
+# Service Endpoints
+- hosts: Controller
+  become: yes
+  tasks:
+   - name: "Create Service Endpoint"
+     shell: . /root/admin-openrc && openstack endpoint create --region RegionOne image public http://Controller:9292 && openstack endpoint create --region RegionOne image internal http://Controller:9292 && openstack endpoint create --region RegionOne image admin http://Controller:9292
+   - shell: . /root/admin-openrc && openstack endpoint create --region RegionOne compute public http://Controller:8774/v2.1 && openstack endpoint create --region RegionOne compute internal http://Controller:8774/v2.1 && openstack endpoint create --region RegionOne compute admin http://Controller:8774/v2.1
+   - shell: . /root/admin-openrc && openstack endpoint create --region RegionOne placement public http://Controller:8778 && openstack endpoint create --region RegionOne placement internal http://Controller:8778 && openstack endpoint create --region RegionOne placement admin http://Controller:8778
+   - shell: . /root/admin-openrc && openstack endpoint create --region RegionOne network public http://Controller:9696 && openstack endpoint create --region RegionOne network internal http://Controller:9696 && openstack endpoint create --region RegionOne network admin http://Controller:9696
+   - shell: . /root/admin-openrc && openstack endpoint create --region RegionOne volumev2 public http://Controller:8776/v2/%\(project_id\)s && openstack endpoint create --region RegionOne volumev2 internal http://Controller:8776/v2/%\(project_id\)s && openstack endpoint create --region RegionOne volumev2 admin http://Controller:8776/v2/%\(project_id\)s
+   - shell: . /root/admin-openrc && openstack endpoint create --region RegionOne volumev3 public http://Controller:8776/v3/%\(project_id\)s && openstack endpoint create --region RegionOne volumev3 internal http://Controller:8776/v3/%\(project_id\)s && openstack endpoint create --region RegionOne volumev3 admin http://Controller:8776/v3/%\(project_id\)s

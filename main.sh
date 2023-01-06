@@ -56,7 +56,7 @@ echo -ne '\n' "10.194.100.13 hostname=Compute" >> /etc/ansible/hosts
 # Sleep for 2min
 sleep 2m
 
-# Run Ansible Script to set hostname
+# Run Ansible Scripts
 cd /root/ansibleserver
 ansible-playbook initialsetup.yml
 ansible-playbook mariadb.yml

@@ -68,5 +68,4 @@
         export OS_IMAGE_API_VERSION=2
 
    - name: "Create Service Project"
-     shell: . /root/admin-openrc
-   - command: openstack project create --domain default --description "Service Project" service
+     shell: . /root/admin-openrc && openstack project create --domain default --description "Service Project" service

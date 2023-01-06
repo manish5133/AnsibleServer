@@ -38,10 +38,7 @@
      ignore_errors: true
    - command: 'keystone-manage credential_setup --keystone-user keystone --keystone-group keystone'
      ignore_errors: true
-   - command: 'keystone-manage bootstrap --bootstrap-password admin   --bootstrap-admin-url http://Controller:5000/v3/   --bootstrap-internal-url http://Controller:5000/v3/   --bootstrap-public-url http://Controller:5000/v3/   --bootstrap-region-id RegionOne'
-     ignore_errors: true
-   - command: 'keystone-manage bootstrap --bootstrap-password admin   --bootstrap-admin-url http://Controller:5000/v3/   --bootstrap-internal-url http://Controller:5000
-/v3/   --bootstrap-public-url http://Controller:5000/v3/   --bootstrap-region-id RegionOne'
+   - command: 'keystone-manage bootstrap --bootstrap-password admin --bootstrap-admin-url http://Controller:5000/v3/ --bootstrap-internal-url http://Controller:5000/v3/   --bootstrap-public-url http://Controller:5000/v3/   --bootstrap-region-id RegionOne'
      ignore_errors: true
    - command:  'ln -s /usr/share/keystone/wsgi-keystone.conf /etc/httpd/conf.d/'
      ignore_errors: true
@@ -53,10 +50,10 @@
 
    - name: "Create admin-openrc file"
      file:
-      path: /home/centos/admin-openrc
+      path: /root/admin-openrc
       state: touch
    - blockinfile:
-      path: /home/centos/admin-openrc
+      path: /root/admin-openrc
       block: |
         export OS_PROJECT_DOMAIN_NAME=Default
         export OS_USER_DOMAIN_NAME=Default

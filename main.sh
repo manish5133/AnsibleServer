@@ -65,3 +65,4 @@ ansible-playbook memcached.yml
 ansible-playbook etcd.yml
 ansible-playbook databasecreation.yml 
 ansible-playbook databaseuseraccess.yml
+ansible-playbook keystone.yml

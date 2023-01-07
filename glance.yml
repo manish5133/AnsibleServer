@@ -64,7 +64,7 @@
            filesystem_store_datadir = /var/lib/glance/images/
 
    - name: "initialize glance database"
-     command: '/usr/bin/glance-manage db_sync'
+     shell: 'su -s /bin/sh -c "glance-manage db_sync" glance'
      ignore_errors: true
 
    - name: "Start & Enable the services"

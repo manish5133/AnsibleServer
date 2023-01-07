@@ -14,6 +14,7 @@ yum install git -y
 
 # Performing task in screen to avoid any network glitch
 screen -S OpenstackInstallation
+sh ansibleserver/main.sh
 
 # INSTALLING ANSIBLE PACKAGES
 yum install epel-release -y

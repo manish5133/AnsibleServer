@@ -73,3 +73,4 @@ ansible-playbook databaseuseraccess.yml
 ansible-playbook keystone.yml
 ansible-playbook serviceaccount.yml
 ansible-playbook serviceendpoint.yml
+ansible-playbook glance.yml

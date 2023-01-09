@@ -70,7 +70,7 @@
        insertafter: '^\[oslo_concurrency\]'
        block: |
          lock_path = /var/lib/neutron/tmp
-
+       state: present
    - name: "Configure the ML2 plug-in"
      blockinfile:
        marker: "#Block 6 Neutron"
@@ -82,6 +82,7 @@
          tenant_network_types = vxlan
          mechanism_drivers = linuxbridge,l2population
          extension_drivers = port_security
+       state: present
    - blockinfile:
        marker: "#Block 7 Neutron"
        path: /etc/neutron/plugins/ml2/ml2_conf.ini
@@ -89,7 +90,7 @@
        insertafter: '^\[ml2_type_flat\]'
        block: |
          flat_networks = provider
-
+       state: present
    - blockinfile:
        marker: "#Block 8 Neutron"
        path: /etc/neutron/plugins/ml2/ml2_conf.ini
@@ -97,6 +98,7 @@
        insertafter: '^\[ml2_type_vxlan\]'
        block: |
          vni_ranges = 1:1000
+       state: present
    - blockinfile:
        marker: "#Block 9 Neutron"
        path: /etc/neutron/plugins/ml2/ml2_conf.ini
@@ -104,6 +106,7 @@
        insertafter: '^\[securitygroup\]'
        block: |
          enable_ipset = true
+       state: present
 
    - name: "Configure the Linux bridge agent"
      blockinfile:
@@ -113,6 +116,7 @@
        insertafter: '^\[linux_bridge\]'
        block: |
          physical_interface_mappings = provider:eth0
+       state: present
    - blockinfile:
        marker: "#Block 11 Neutron"
        path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini
@@ -122,6 +126,7 @@
          enable_vxlan = true
          local_ip = {{ ansible_default_ipv4.address }}
          l2_population = true
+       state: present
    - blockinfile:
        marker: "#Block 12 Neutron"
        path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini
@@ -130,6 +135,7 @@
        block: |
          enable_security_group = true
          firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+       state: present
 
    - name: "Network Bridge Module Enable"
      shell: 'modprobe br_netfilter' 

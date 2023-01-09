@@ -73,3 +73,4 @@ ansible-playbook serviceendpoint.yml
 ansible-playbook glance.yml
 ansible-playbook nova-controller.yml
 ansible-playbook nova-compute.yml
+ansible-playbook neutron-controller.yml

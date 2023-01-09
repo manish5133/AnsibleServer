@@ -1,0 +1,109 @@
+# Creating new files for Nova Compute Service
+# Nova Compute Service
+- hosts: Compute
+  become: yes
+  tasks:
+   - name: "Installing & Configuring Nova Service"
+     yum:
+      name: openstack-nova-compute 
+      state: present
+      update_cache: yes
+   
+   - name: "Add Connection String In the Config File"
+     blockinfile:
+       marker: "#Block 1 Nova"
+       path: /etc/nova/nova.conf
+       regexp: '^[DEFAULT]'
+       insertafter: '^\[DEFAULT\]'
+       block: |
+         enabled_apis = osapi_compute,metadata
+         transport_url = rabbit://openstack:admin@Controller
+         my_ip = {{ ansible_default_ipv4.address }}
+         use_neutron = True
+         firewall_driver = nova.virt.firewall.NoopFirewallDriver
+       state: present
+   - blockinfile:
+       marker: "#Block 2 Nova"
+       path: /etc/nova/nova.conf
+       regexp: '^[keystone_authtoken]'
+       insertafter: '^\[keystone_authtoken\]'
+       block: |
+         auth_url = http://Controller:5000/v3
+         memcached_servers = Controller:11211
+         auth_type = password
+         project_domain_name = default
+         user_domain_name = default
+         project_name = service
+         username = nova
+         password = admin
+       state: present
+   - blockinfile:
+       marker: "#Block 3 Nova"
+       path: /etc/nova/nova.conf
+       regexp: '^[vnc]'
+       insertafter: '^\[vnc\]'
+       block: |
+        enabled = true
+        server_listen = 0.0.0.0
+        server_proxyclient_address = $my_ip
+        novncproxy_base_url = http://Controller:6080/vnc_auto.html
+       state: present
+   - blockinfile:
+       marker: "#Block 4 Nova"
+       path: /etc/nova/nova.conf
+       regexp: '^[placement]'
+       insertafter: '^\[placement\]'
+       block: |
+        os_region_name = RegionOne
+        project_domain_name = Default
+        project_name = service
+        auth_type = password
+        user_domain_name = Default
+        auth_url = http://Controller:5000/v3
+        username = placement
+        password = admin
+       state: present
+   - blockinfile:
+       marker: "#Block 5 Nova"
+       path: /etc/nova/nova.conf
+       regexp: '^[oslo_concurrency]'
+       insertafter: '^\[oslo_concurrency\]'
+       block: |
+         lock_path = /var/lib/nova/tmp
+       state: present
+   - blockinfile:
+       marker: "#Block 6 Nova"
+       path: /etc/nova/nova.conf
+       regexp: '^[glance]'
+       insertafter: '^\[glance\]'
+       block: |
+         api_servers = http://Controller:9292
+       state: present
+   - blockinfile:
+       marker: "#Block 7 Nova"
+       path: /etc/nova/nova.conf
+       regexp: '^[api]'
+       insertafter: '^\[api\]'
+       block: |
+         auth_strategy = keystone
+       state: present
+   - blockinfile:
+       marker: "#Block 8 Nova"
+       path: /etc/nova/nova.conf
+       regexp: '^[libvirt]'
+       insertafter: '^\[libvirt\]'
+       block: |
+         virt_type = qemu
+       state: present
+
+   - name: "Start & Enable the services"
+     service:
+      name: "{{ item }}"
+      enabled: true
+      state: started
+     with_items:
+      - libvirtd.service
+      - openstack-nova-compute.service
+
+   - name: "initialize nova database"
+     shell: . /root/admin-openrc && su -s /bin/sh -c "nova-manage cell_v2 discover_hosts --verbose" nova

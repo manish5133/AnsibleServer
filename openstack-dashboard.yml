@@ -1,0 +1,71 @@
+# Creating new files for Dashboard Service
+# Dashboard Service
+- hosts: Controller
+  become: yes
+  tasks:
+   - name: "Install Openstack Dashboard Service"
+     yum:
+      name: openstack-dashboard
+      state: present
+      update_cache: yes
+
+   - name: "Add configuration line"
+     lineinfile:
+        path: /etc/openstack-dashboard/local_settings
+        regex: '^OPENSTACK_HOST .*'
+        line: 'OPENSTACK_HOST = "Controller"'
+        state: present
+   - lineinfile:
+        path: /etc/openstack-dashboard/local_settings
+        regex: '^ALLOWED_HOSTS .*'
+        line: "ALLOWED_HOSTS = ['*']"
+        state: present
+   - lineinfile:
+        path: /etc/openstack-dashboard/local_settings
+        insertafter: '^#OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT .*'
+        line: "OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True"
+        state: present
+   - blockinfile:
+        path: /etc/openstack-dashboard/local_settings
+        insertbefore: '^#OPENSTACK_API_VERSIONS .*'
+        block: |
+          OPENSTACK_API_VERSIONS = {
+              "identity": 3,
+              "image": 2,
+              "volume": 2,
+          }
+        state: present
+   - lineinfile:
+        path: /etc/openstack-dashboard/local_settings
+        insertafter: '^#OPENSTACK_KEYSTONE_DEFAULT_DOMAIN .*'
+        line: 'OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = "Default"'
+        state: present
+   - lineinfile:
+        path: /etc/openstack-dashboard/local_settings
+        insertbefore: '^CACHES .*'
+        line: "SESSION_ENGINE = 'django.contrib.sessions.backends.cache'"
+        state: present
+   - lineinfile:
+        path: /etc/openstack-dashboard/local_settings
+        regex: "^        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',"
+        line: "         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',"
+        state: present
+   - lineinfile:
+        path: /etc/openstack-dashboard/local_settings
+        insertafter: "^         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',"
+        line: "         'LOCATION': 'Controller:11211',"
+        state: present
+
+   - lineinfile:
+        path: /etc/httpd/conf.d/openstack-dashboard.conf
+        insertafter: '^WSGISocketPrefix run/wsgi'
+        line: "WSGIApplicationGroup %{GLOBAL}"
+        state: present
+   - name: "Restart the services"
+     service:
+      name: "{{ item }}"
+      enabled: true
+      state: started
+     with_items:
+       - memcached.service
+       - httpd.service

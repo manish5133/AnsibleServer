@@ -192,7 +192,7 @@
    - name: "Populate Neutron Database"
      shell: 'ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini' 
    - shell: 'su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron'
-   - ignore_errors: true
+     ignore_errors: true
 
 
 

@@ -17,6 +17,11 @@
         state: present
    - lineinfile:
         path: /etc/openstack-dashboard/local_settings
+        insertafter: '^OPENSTACK_HOST .*'
+        line: "WEBROOT = '/dashboard'"
+        state: present        
+   - lineinfile:
+        path: /etc/openstack-dashboard/local_settings
         regex: '^ALLOWED_HOSTS .*'
         line: "ALLOWED_HOSTS = ['*']"
         state: present

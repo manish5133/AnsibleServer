@@ -36,7 +36,7 @@
 
    - name: "Configure the server component"
      blockinfile:
-       marker: "#Block 1 Cinder"
+       marker: "#Block 2 Cinder"
        path: /etc/cinder/cinder.conf
        regexp: '^[DEFAULT]'
        insertafter: '^\[DEFAULT\]'
@@ -49,7 +49,7 @@
        state: present
 
    - blockinfile:
-       marker: "#Block 2 Cinder"
+       marker: "#Block 3 Cinder"
        path: /etc/cinder/cinder.conf
        regexp: '^[keystone_authtoken]'
        insertafter: '^\[keystone_authtoken\]'
@@ -66,7 +66,7 @@
        state: present
 
    - blockinfile:
-       marker: "#Block 3 Cinder"
+       marker: "#Block 4 Cinder"
        path: /etc/cinder/cinder.conf
        regexp: '^[oslo_concurrency]'
        insertafter: '^\[oslo_concurrency\]'
@@ -75,7 +75,7 @@
        state: present
 
    - blockinfile:
-       marker: "#Block 4 Cinder"
+       marker: "#Block 5 Cinder"
        path: /etc/cinder/cinder.conf
        regexp: '^[database]'
        insertafter: '^\[database\]'
@@ -84,7 +84,7 @@
        state: present
        
    - blockinfile:
-       marker: "#Block 5 Cinder"
+       marker: "#Block 6 Cinder"
        path: /etc/cinder/cinder.conf
        block: |
          [lvm]

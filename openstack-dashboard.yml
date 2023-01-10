@@ -69,8 +69,7 @@
    - name: "Restart the services"
      service:
       name: "{{ item }}"
-      enabled: true
-      state: started
+      state: restarted
      with_items:
        - memcached.service
        - httpd.service

@@ -1,0 +1,85 @@
+# Creating new files for Cinder Service
+# Cinder Service
+- hosts: Controller
+  become: yes
+  tasks:
+   - name: "Installing & Configuring Cinder Service"
+     yum:
+      name: openstack-cinder
+      state: present
+      update_cache: yes
+   
+   - name: "Configure the server component"
+     blockinfile:
+       marker: "#Block 1 Cinder"
+       path: /etc/cinder/cinder.conf
+       regexp: '^[DEFAULT]'
+       insertafter: '^\[DEFAULT\]'
+       block: |
+         transport_url = rabbit://openstack:admin@Controller
+         auth_strategy = keystone
+         my_ip = {{ ansible_default_ipv4.address }}
+       state: present
+
+   - blockinfile:
+       marker: "#Block 2 Cinder"
+       path: /etc/cinder/cinder.conf
+       regexp: '^[keystone_authtoken]'
+       insertafter: '^\[keystone_authtoken\]'
+       block: |
+         auth_uri = http://Controller:5000
+         auth_url = http://Controller:5000
+         memcached_servers = Controller:11211
+         auth_type = password
+         project_domain_id = default
+         user_domain_id = default
+         project_name = service
+         username = cinder
+         password = admin
+       state: present
+
+   - blockinfile:
+       marker: "#Block 3 Cinder"
+       path: /etc/cinder/cinder.conf
+       regexp: '^[oslo_concurrency]'
+       insertafter: '^\[oslo_concurrency\]'
+       block: |
+         lock_path = /var/lib/cinder/tmp
+       state: present
+
+   - blockinfile:
+       marker: "#Block 4 Cinder"
+       path: /etc/cinder/cinder.conf
+       regexp: '^[database]'
+       insertafter: '^\[database\]'
+       block: |
+         connection = mysql+pymysql://cinder:admin@Controller/cinder
+       state: present
+
+   - name: "Populate Cinder Database"
+     shell: 'su -s /bin/sh -c "cinder-manage db sync" cinder'
+        
+   - name: "Configure Compute to use Cinder"  
+     blockinfile:
+       marker: "#Block 5 Cinder"
+       path: /etc/nova/nova.conf
+       regexp: '^[cinder]'
+       insertafter: '^\[cinder\]'
+       block: |
+         os_region_name = RegionOne
+       state: present
+
+   - name: "Restart the nova api services"
+     service:
+      name: openstack-nova-api
+      enabled: true
+      state: restarted
+
+   - name: "Start & Enable the services"
+     service:
+      name: "{{ item }}"
+      enabled: true
+      state: started
+     with_item:
+       - openstack-cinder-api.service 
+       - openstack-cinder-scheduler.service

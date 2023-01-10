@@ -16,22 +16,22 @@
       state: started
 
    - name: "Create Volume Group"
-     shell: 'pvcreate /dev/sdb'
-   - shell: 'vgcreate cinder-volumes /dev/sdb'
+     shell: 'pvcreate /dev/xvdb'
+   - shell: 'vgcreate cinder-volumes /dev/xvdb'
 
    - name: "Edit configuration of LVM"
-   - lineinfile:
+     lineinfile:
         path: /etc/lvm/lvm.conf
-        insertafter: "^        # filter = [ "a|.*/|" ]"
-        line: "        filter = [ "a/sdb/", "r/.*/"]"
+        insertafter: '^        # filter = [ "a|.*/|" ]'
+        line: '        filter = [ "a/sdb/", "r/.*/"]'
         state: present
-   
+
    - name: "Installing & Configuring Cinder Service"
      yum:
       name: ['openstack-cinder', 'targetcli', 'python-keystone']
       state: present
       update_cache: yes
-   
+
    - name: "Configure the server component"
      blockinfile:
        marker: "#Block 1 Cinder"
@@ -43,7 +43,7 @@
          auth_strategy = keystone
          my_ip = {{ ansible_default_ipv4.address }}
          enabled_backends = lvm
-         glance_api_servers = http://Controller:9292  
+         glance_api_servers = http://Controller:9292
        state: present
 
    - blockinfile:
@@ -98,6 +98,6 @@
       name: "{{ item }}"
       enabled: true
       state: started
-     with_item:
-       - openstack-cinder-volume.service 
+     with_items:
+       - openstack-cinder-volume.service
        - target.service

@@ -8,7 +8,7 @@
       name: openstack-cinder
       state: present
       update_cache: yes
-   
+
    - name: "Configure the server component"
      blockinfile:
        marker: "#Block 1 Cinder"
@@ -58,8 +58,8 @@
 
    - name: "Populate Cinder Database"
      shell: 'su -s /bin/sh -c "cinder-manage db sync" cinder'
-        
-   - name: "Configure Compute to use Cinder"  
+
+   - name: "Configure Compute to use Cinder"
      blockinfile:
        marker: "#Block 5 Cinder"
        path: /etc/nova/nova.conf
@@ -80,6 +80,6 @@
       name: "{{ item }}"
       enabled: true
       state: started
-     with_item:
-       - openstack-cinder-api.service 
+     with_items:
+       - openstack-cinder-api.service
        - openstack-cinder-scheduler.service

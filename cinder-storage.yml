@@ -20,10 +20,12 @@
    - shell: 'vgcreate cinder-volumes /dev/xvdb'
 
    - name: "Edit configuration of LVM"
-     lineinfile:
+     blockinfile:
+        marker: "#Block 1 Cinder"
         path: /etc/lvm/lvm.conf
-        insertafter: '^        # filter = [ "a|.*/|" ]'
-        line: '        filter = [ "a/sdb/", "r/.*/"]'
+        insertafter: '^devices {'
+        block: |
+          filter = [ "a/xvdb/", "r/.*/"]
         state: present
 
    - name: "Installing & Configuring Cinder Service"
@@ -80,13 +82,12 @@
        block: |
          connection = mysql+pymysql://cinder:admin@Controller/cinder
        state: present
-
+       
    - blockinfile:
        marker: "#Block 5 Cinder"
        path: /etc/cinder/cinder.conf
-       regexp: '^[lvm]'
-       insertafter: '^\[lvm\]'
        block: |
+         [lvm]
          volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
          volume_group = cinder-volumes
          iscsi_protocol = iscsi
@@ -100,4 +101,4 @@
       state: started
      with_items:
        - openstack-cinder-volume.service
-       - target.service
+       - target.service       

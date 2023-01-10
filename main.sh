@@ -76,4 +76,5 @@ ansible-playbook nova-compute.yml
 ansible-playbook neutron-controller.yml
 ansible-playbook neutron-compute.yml
 ansible-playbook openstack-dashboard.yml
+ansible-playbook cinder-storage.yml
 ansible-playbook cinder-controller.yml
